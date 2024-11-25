@@ -1,15 +1,14 @@
 import nltk
 from nltk.tokenize import word_tokenize
-from nltk.corpus.reader.plaintext import PlaintextCorpusReader
-from nltk.corpus import stopwords, wordnet
-from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer  # Import WordNetLemmatizer for lemmatization
 import string
 import os
-from Scraping import scrape_document
+from Scraping_soup import scrape_document
 
-
-url = "https://webscraper.io/test-sites/e-commerce/static"
+url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 output_file = "document.txt"
+final_corpus_file = "final_corpus.txt"  # File to save all words
 
 # Scrape the document and read the contents
 scrape_document(url, output_file)
@@ -22,9 +21,9 @@ with open(output_file, 'r') as file:
 texts = texts.splitlines()
 
 # Step 1: Tokenization and Preprocessing
-tokenized_texts = []
+all_normalized_words = []  # List to hold all normalized words
 stop_words = set(stopwords.words('english'))
-lemmatizer = WordNetLemmatizer()
+lemmatizer = WordNetLemmatizer()  # Initialize the WordNet Lemmatizer
 
 for text in texts:
     # Tokenize into words
@@ -45,21 +44,11 @@ for text in texts:
             word = lemmatizer.lemmatize(word)
             normalized_words.append(word)
 
-    # Join normalized words back into a sentence (optional)
-    normalized_text = " ".join(normalized_words)
-    tokenized_texts.append(normalized_text)
+    # Add normalized words to the overall list
+    all_normalized_words.extend(normalized_words)
 
-# Step 2: Organize and Save Corpus
-corpus_dir = 'my_custom_corpus'
-if not os.path.exists(corpus_dir):
-    os.makedirs(corpus_dir)
-
-# Write tokenized texts to separate files in the corpus directory
-for i, text in enumerate(tokenized_texts):
-    with open(os.path.join(corpus_dir, f'doc{i + 1}.txt'), 'w', encoding='utf-8') as file:
-        file.write(text)
-
-# Step 3: Create an NLTK Corpus Reader
-corpus = PlaintextCorpusReader(corpus_dir, '.*\.txt')
-print("Words in the corpus:")
-print(corpus.words())
+# Step 2: Save all normalized words to a single text file
+with open(final_corpus_file, 'w', encoding='utf-8') as file:
+    for word in all_normalized_words:
+        file.write(f"{word}\n")  # Write each word on a new line
+print(f"Final corpus saved to '{final_corpus_file}' with each word on a new line.")
