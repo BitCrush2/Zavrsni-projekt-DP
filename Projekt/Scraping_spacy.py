@@ -27,4 +27,4 @@ def scrape_document(url, output_file):
             file.write(sent.text + '\n')
 
 # Example usage
-# scrape_document('https://example.com', 'output.txt')
+#scrape_document('https://quotes.toscrape.com', 'output.txt')
