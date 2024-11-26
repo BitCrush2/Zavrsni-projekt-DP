@@ -4,7 +4,8 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer  # Import WordNetLemmatizer for lemmatization
 import string
 import os
-from Scraping_soup import scrape_document
+from Scraping_spacy import scrape_document
+
 
 url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 output_file = "document.txt"
