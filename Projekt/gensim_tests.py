@@ -1,4 +1,6 @@
 from gensim.models import Word2Vec
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 
 def load_model(model_file):
@@ -37,6 +39,17 @@ def check_most_similar(model):
         except Exception as e:
             print(f"Error retrieving similar words: {e}")
 
+def plot_words(model):
+    words = list(model.wv.index_to_key)[:100]  # Select top 100 words for visualization
+    word_vectors = model.wv[words]
+    pca = PCA(n_components=2)
+    result = pca.fit_transform(word_vectors)
+
+    plt.figure(figsize=(10, 10))
+    plt.scatter(result[:, 0], result[:, 1])
+    for i, word in enumerate(words):
+        plt.annotate(word, xy=(result[i, 0], result[i, 1]))
+    plt.show()
 
 def main():
     model_file = "word2vec.model"  # Ensure this matches your saved model filename
@@ -47,6 +60,8 @@ def main():
         #print(word)
     if model is not None:
         check_most_similar(model)
+
+    plot_words(model)
 
 
 if __name__ == '__main__':
