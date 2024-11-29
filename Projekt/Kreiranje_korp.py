@@ -8,7 +8,7 @@ import re
 from gensim.models import Word2Vec
 from Scraping_spacy import scrape_document
 
-# Ensure necessary NLTK resources are downloaded (uncomment if needed)
+
 # nltk.download('punkt')
 # nltk.download('stopwords')
 # nltk.download('wordnet')
