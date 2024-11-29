@@ -1,4 +1,5 @@
 import requests
+import os
 from unstructured.partition.text import partition_text
 from Scraping_soup import scrape_document
 
@@ -8,6 +9,7 @@ url = input("Please enter the URL of the website to scrape: ")
 # Scrape the document
 scrape_document(url,"output1.txt")
 document_text="output1.txt"
+
 
 if document_text:
     # Partition the scraped text into structured elements
@@ -21,3 +23,5 @@ if document_text:
     print("Corpus created successfully and saved to 'corpus.txt'.")
 else:
     print("Failed to scrape any content from the provided URL.")
+
+os.remove("output1.txt")
