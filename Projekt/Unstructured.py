@@ -12,6 +12,7 @@ from nltk.tokenize import word_tokenize
 # Initialize stopwords
 stop_words = set(stopwords.words('english'))
 
+
 def clean_text(text):
     """Clean and preprocess the input text."""
     # Tokenize the text
@@ -26,6 +27,7 @@ def clean_text(text):
 
     # Join the cleaned tokens back into a string
     return ' '.join(cleaned_tokens)
+
 
 # Get user input for the URL
 url = input("Please enter the URL of the website to scrape: ")
@@ -57,27 +59,33 @@ if os.path.exists(document_text):
 
     print(f"Corpus created successfully and saved to '{corpus_file_name}'.")
 
-    # Load FLAN-T5 model for summarization
-    summarizer = pipeline("summarization", model="jordiclive/flan-t5-3b-summarizer")
+    # Load sentiment analysis model
+    sentiment_analyzer = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
-    # Concatenate all cleaned texts into a single string for summarization
-    full_cleaned_text = ' '.join(cleaned_texts)
+    # Load named entity recognition model
+    ner_model = pipeline("ner", aggregation_strategy="simple", model="dbmdz/bert-large-cased-finetuned-conll03-english")
 
-    if len(full_cleaned_text) > 30:  # Ensure text is longer than 30 characters
-        prompt = "Produce an article summary of the following news article:"
-        try:
-            summary = summarizer(
-                f"{prompt} {full_cleaned_text}",
-                max_length=150,  # Adjust max length as needed (up to model limits)
-                min_length=30,   # Adjust min length as needed
-                num_beams=5,
-                no_repeat_ngram_size=3,
-                truncation=True   # Ensure truncation is enabled if input exceeds max length
-            )
-            print(f"Original Text: {full_cleaned_text}")
-            print(f"Summary: {summary[0]['summary_text']}\n")
-        except Exception as e:
-            print(f"Error during summarization: {e}")
+    # Analyze each cleaned text line by line
+    for cleaned_text in cleaned_texts:
+        if len(cleaned_text) > 30:  # Ensure text is longer than 30 characters
+
+            # Sentiment Analysis
+            try:
+                sentiment = sentiment_analyzer(cleaned_text)
+                print(f"Sentiment for line: {cleaned_text}\nSentiment: {sentiment}\n")
+            except Exception as e:
+                print(f"Error during sentiment analysis: {e}")
+
+            # Named Entity Recognition (NER)
+            try:
+                entities = ner_model(cleaned_text)
+                print("Named Entities for line:")
+                for entity in entities:
+                    print(f"- {entity['word']} ({entity['entity_group']})")
+                print("\n")
+            except Exception as e:
+                print(f"Error during NER: {e}")
+
 else:
     print("Failed to scrape any content from the provided URL.")
 

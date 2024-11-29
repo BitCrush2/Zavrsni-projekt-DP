@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+import os
 
 def scrape_document(url, output_file):
     headers = {
@@ -17,18 +17,31 @@ def scrape_document(url, output_file):
 
     # Remove header and footer elements
     for header in soup.find_all('header'):
-        header.decompose()  # Remove header elements
+        header.decompose()
     for footer in soup.find_all('footer'):
-        footer.decompose()  # Remove footer elements
+        footer.decompose()
 
     # Extract the main content from the body
     body_content = soup.find('body')
 
     # Check if body_content is found
     if body_content:
-        # Write all text from the body to the output file, excluding headers and footers
         with open(output_file, 'w', encoding='utf-8') as file:
+            # Write all text from the body to the output file
             file.write(body_content.get_text(separator='\n', strip=True))
+
+            # Capture tables and images
+            tables = body_content.find_all('table')
+            for table in tables:
+                file.write(str(table) + '\n\n')  # Write table HTML
+
+            images = body_content.find_all('img')
+            for img in images:
+                img_src = img.get('src')
+                if img_src:
+                    file.write(f"Image URL: {img_src}\n")  # Write image URLs
+
+            print(f"Scraping completed. Content saved to {output_file}.")
     else:
         print("No body content found.")
 
