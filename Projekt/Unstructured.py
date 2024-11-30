@@ -4,14 +4,15 @@ from unstructured.partition.text import partition_text
 from Scraping_soup import scrape_document
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import requests
+from bs4 import BeautifulSoup
 
-# Download NLTK resources (only need to run once)
+# Uncomment these lines to download NLTK resources if not already downloaded
 # nltk.download('punkt')
 # nltk.download('stopwords')
 
 # Initialize stopwords
 stop_words = set(stopwords.words('english'))
-
 
 def clean_text(text):
     """Clean and preprocess the input text."""
@@ -28,6 +29,17 @@ def clean_text(text):
     # Join the cleaned tokens back into a string
     return ' '.join(cleaned_tokens)
 
+def get_website_title(url):
+    """Fetches the title of the webpage."""
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+        title = soup.title.string if soup.title else "Untitled"
+        return title.strip()
+    except Exception as e:
+        print(f"Error fetching title: {e}")
+        return "Untitled"
 
 # Get user input for the URL
 url = input("Please enter the URL of the website to scrape: ")
@@ -44,8 +56,8 @@ if os.path.exists(document_text):
     folder_name = "Corpus_unstructured"
     os.makedirs(folder_name, exist_ok=True)  # Create folder if it doesn't exist
 
-    # Extract the base name from the URL for naming the text file
-    website_name = url.split("//")[-1].split("/")[0]  # Get domain name from URL
+    # Get full website title for use in filenames
+    website_name = get_website_title(url).replace(" ", "_")  # Replace spaces with underscores for filename safety
     corpus_file_name = os.path.join(folder_name, f"{website_name}.txt")  # Create full path for corpus file
 
     # Save the structured elements to a corpus file with cleaned text

@@ -7,15 +7,21 @@ import os
 import re
 from gensim.models import Word2Vec
 from Scraping_spacy import scrape_document
+import requests
+from bs4 import BeautifulSoup
 
 
+# Uncomment these lines to download NLTK resources if not already downloaded
 # nltk.download('punkt')
 # nltk.download('stopwords')
 # nltk.download('wordnet')
 
 def is_emoji(s):
     """Check if a string contains an emoji."""
-    return bool(re.search(r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F900-\U0001F9FF\U00002700-\U000027BF]', s))
+    return bool(re.search(
+        r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F900-\U0001F9FF\U00002700-\U000027BF]',
+        s))
+
 
 def preprocess_text(texts):
     """Tokenizes, removes stopwords, lemmatizes words, and filters out numbers and emojis."""
@@ -27,13 +33,15 @@ def preprocess_text(texts):
         words = word_tokenize(text)
         normalized_words = [
             lemmatizer.lemmatize(word.lower().translate(str.maketrans('', '', string.punctuation)))
-            for word in words if word.isalpha() and word.lower() not in stop_words and not is_emoji(word) and not word.isdigit()
+            for word in words if
+            word.isalpha() and word.lower() not in stop_words and not is_emoji(word) and not word.isdigit()
         ]
         if normalized_words:  # Only append non-empty lists
             all_normalized_words.append(normalized_words)
 
     print(f"Preprocessed {len(all_normalized_words)} sentences.")  # Debug print
     return all_normalized_words
+
 
 def save_corpus(corpus, filename):
     """Saves normalized words to a text file in the Corpus directory."""
@@ -47,9 +55,25 @@ def save_corpus(corpus, filename):
 
     print(f"Corpus appended to '{filename}' with {len(corpus)} sentences.")  # Debug print
 
+
+def get_website_title(url):
+    """Fetches the title of the webpage."""
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+        title = soup.title.string if soup.title else "Untitled"
+        return title.strip()
+    except Exception as e:
+        print(f"Error fetching title: {e}")
+        return "Untitled"
+
+
 def main():
     url = input("Please enter the URL of the website to scrape: ")
-    website_name = url.split("//")[-1].split("/")[0]  # Extract domain name from URL
+
+    # Get full website title for use in filenames
+    website_name = get_website_title(url).replace(" ", "_")  # Replace spaces with underscores for filename safety
 
     # Define fixed filename for the model and dynamic filename for the corpus
     fixed_model_file = "word2vec.model"
@@ -91,6 +115,7 @@ def main():
 
     # Cleanup temporary files if necessary
     os.remove(output_file)
+
 
 if __name__ == '__main__':
     main()
