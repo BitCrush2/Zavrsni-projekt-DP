@@ -1,0 +1,9 @@
+1. Unutar Kreairanje_korp.py bi li bilo bolje kod kreiranja gensim model da je minimum count 2?
+
+2. Kod pretprocesiranja teksta je li dobro ovako da mičem emojie i brojeve jer kad je bilo bez toga mi je one random brojeve kao npr. kod wikipedije koji su reference numberi stavljalo i brojeve linije na kojoj je riječ/rečenica.
+
+3. Za unstructured.py nisam siguran je li to ovako treba biti ili bi nešto drugo trebao koristiti, jer nisam siguran kako bi trebalo izgledati.
+
+4. Unutar gensim_tests.py da dodam još testova nekih ili je ovaj graf i similiratiy test dovoljan?
+
+5.I još  prijedlozi što još mogu napraviti ili dodati.
