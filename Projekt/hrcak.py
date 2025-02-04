@@ -29,7 +29,7 @@ def extract_text_from_pdf(pdf_path):
         print(f"Error extracting text from {pdf_path}: {e}")
         return None
 
-def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="pdfs"):
+def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="hrcak"):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -56,6 +56,6 @@ def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="pdfs"):
 
 if __name__ == "__main__":
     base_url = "https://hrcak.srce.hr"
-    keyword = input("Enter the keyword to search for (e.g., medicine): ")
-    num_pages = int(input("Enter the number of pages to scrape (each page increments by 10): "))
+    keyword = input("Enter the keyword to search for : ")
+    num_pages = int(input("Enter the number of pages to scrape : "))
     scrape_pdfs_from_website(base_url, keyword, num_pages)
