@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -39,11 +40,24 @@ def get_article_pdf_link(article_url):
         response = requests.get(article_url)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        pdf_link = soup.find('a', class_='pdf-link')['href']
-        return pdf_link
+
+        # Check for MDPI-style PDF link
+        pdf_link = soup.find('a', class_='pdf-link')
+        if pdf_link and pdf_link.get('href'):
+            return pdf_link['href']
+
+        # Check for Rbone-style PDF link
+        pdf_link = soup.find('a', text='PDF')
+        if pdf_link and pdf_link.get('href'):
+            return pdf_link['href']
+
+        # If no PDF link is found, return None
+        print(f"No PDF link found on {article_url}")
+        return None
+
     except Exception as err:
         print(f"Error fetching PDF link from {article_url}: {err}")
-    return None
+        return None
 
 def display_results(search_type, search_results):
     print(f"Found {len(search_results['results'])} {search_type}:")
@@ -68,6 +82,11 @@ def display_results(search_type, search_results):
                 print("   Article Link: Not available")
         print()
 
+def sanitize_filename(title):
+    # Remove invalid characters from the title to make it a valid filename
+    sanitized_title = re.sub(r'[\\/*?:"<>|]', "_", title)
+    return sanitized_title.strip()
+
 def download_articles(search_results, download_dir):
     for i, item in enumerate(search_results['results'], start=1):
         bibjson = item.get('bibjson', {})
@@ -75,7 +94,9 @@ def download_articles(search_results, download_dir):
         if article_links:
             pdf_link = get_article_pdf_link(article_links[0])
             if pdf_link:
-                save_path = os.path.join(download_dir, f"article_{i}.pdf")
+                title = bibjson.get('title', f'article_{i}')
+                sanitized_title = sanitize_filename(title)
+                save_path = os.path.join(download_dir, f"{sanitized_title}.pdf")
                 download_pdf(pdf_link, save_path)
             else:
                 print(f"No PDF available for article {i}: {bibjson.get('title', 'N/A')}")
@@ -103,8 +124,6 @@ def main():
     display_results(search_type, search_results)
 
     if search_type == "articles":
-        download_choice = input("Do you want to download available PDFs? (yes/no): ").strip().lower()
-        if download_choice == 'yes':
             download_dir = "doaj_pdf"
             os.makedirs(download_dir, exist_ok=True)
             download_articles(search_results, download_dir)
