@@ -20,7 +20,7 @@ def search_articles(query, page):
     url = "https://serpapi.com/search"
     params = {
         'q': query,
-        'engine': 'google',
+        'engine': 'google_scholar',
         'api_key': SERPAPI_KEY,
         'start': (page - 1) * 10  # Pagination
     }
