@@ -1,13 +1,12 @@
 import os
 import json
 import datetime
+import re  # Added for paragraph splitting
 
 
 def txt_to_json(directory):
-    # Iterate over all files in the directory
     for filename in os.listdir(directory):
         if filename.endswith(".txt"):
-            # Construct full file path
             txt_file_path = os.path.join(directory, filename)
 
             # Get file metadata
@@ -16,12 +15,13 @@ def txt_to_json(directory):
             creation_time = datetime.datetime.fromtimestamp(file_stats.st_ctime).isoformat()  # Creation time
             modification_time = datetime.datetime.fromtimestamp(file_stats.st_mtime).isoformat()  # Modification time
 
-            # Read the content of the txt file with UTF-8 encoding
+
+
+            # Read content (existing code)
             try:
                 with open(txt_file_path, 'r', encoding='utf-8') as txt_file:
                     content = txt_file.read()
             except UnicodeDecodeError:
-                # If UTF-8 fails, try a different encoding (e.g., 'latin-1')
                 with open(txt_file_path, 'r', encoding='latin-1') as txt_file:
                     content = txt_file.read()
 
@@ -29,19 +29,28 @@ def txt_to_json(directory):
             word_count = len(content.split())  # Count words
             line_count = len(content.splitlines())  # Count lines
 
-            # Transform the content and metadata into a JSON object
+            # Split into paragraphs
+            paragraphs = [
+                p.strip()
+                for p in re.split(r'\n\s*\n', content)  # Split on 1+ empty lines
+                if p.strip()  # Remove empty paragraphs
+            ]
+
+            # Modified JSON structure
             json_data = {
                 "filename": filename,
                 "file_size_bytes": file_size,
                 "creation_time": creation_time,
                 "modification_time": modification_time,
-                "content": content,
+                "content":content,
+                "paragraphs": paragraphs,  # Changed from "content"
+                "paragraph_count": len(paragraphs),  # New field
                 "metadata": {
                     "word_count": word_count,
-                    "line_count": line_count
+                    "line_count": line_count,
+                    "avg_paragraph_length": f"{len(content) / len(paragraphs):.1f}" if paragraphs else 0
                 }
             }
-
             # Define the output JSON file path
             json_file_path = os.path.join(directory, filename.replace(".txt", ".json"))
 
