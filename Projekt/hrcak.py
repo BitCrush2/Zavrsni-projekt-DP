@@ -66,7 +66,7 @@ def extract_text_from_pdf(pdf_path):
         return None
 
 
-def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="hrcak"):
+def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="pdfs"):
     """
     Scrape PDF files from a website based on a search keyword.
 
@@ -74,7 +74,7 @@ def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="hrcak"):
         base_url (str): The base URL of the website to scrape.
         keyword (str): The keyword to search for.
         num_pages (int): The number of search result pages to scrape.
-        folder_name (str): The directory to save downloaded PDFs (default: "hrcak").
+        folder_name (str): The directory to save downloaded PDFs (default: "pdfs").
     """
     # Create the folder if it doesn't already exist
     if not os.path.exists(folder_name):

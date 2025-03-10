@@ -216,7 +216,7 @@ def main():
 
     # Handle PDF downloads for articles
     if search_type == "articles":
-        download_dir = "doaj_pdf"  # Default download directory
+        download_dir = "pdfs"  # Default download directory
         os.makedirs(download_dir, exist_ok=True)  # Create directory if needed
         download_articles(search_results, download_dir)
 

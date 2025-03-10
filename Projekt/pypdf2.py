@@ -2,7 +2,7 @@ import os
 from PyPDF2 import PdfReader
 
 # Define input and output directories
-input_folder = 'hrcak'
+input_folder = 'pdfs'
 output_folder = 'pypdf2_text'
 
 # Create the output folder if it doesn't exist

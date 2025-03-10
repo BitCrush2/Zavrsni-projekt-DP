@@ -2,7 +2,7 @@ import os
 import fitz  # PyMuPDF
 
 # Define the folder containing the PDF files
-pdf_folder_path = 'hrcak'
+pdf_folder_path = 'pdfs'
 
 # Define the folder to save the extracted text files
 output_folder_path = 'pymupdf_text'

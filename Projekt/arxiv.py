@@ -62,7 +62,7 @@ def main():
     base_url = "http://export.arxiv.org/api/query?"  # Base URL for arXiv API
 
     # Create the folder to save PDFs if it doesn't exist
-    os.makedirs("arxiv_pdf", exist_ok=True)
+    os.makedirs("pdfs", exist_ok=True)
 
     # URL encode the keywords to ensure they are safe for use in URLs
     encoded_keywords = urllib.parse.quote(keywords)

@@ -9,8 +9,8 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 poppler_path = r'C:\Users\Dino\Documents\poppler-24.08.0\Library\bin'
 
 # Define the input and output directories
-input_folder = 'hrcak'
-output_folder = 'pdf2image_text'
+input_folder = 'pdfs'
+output_folder = 'txts'
 
 # Create the output directory if it doesn't exist
 if not os.path.exists(output_folder):

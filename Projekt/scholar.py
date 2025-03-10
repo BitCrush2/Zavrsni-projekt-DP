@@ -131,7 +131,7 @@ def main():
       3. Download the PDF to a local folder named 'scholar_pdf'.
     """
     # Create the output directory if it doesn't exist.
-    output_dir = 'scholar_pdf'
+    output_dir = 'pdfs'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

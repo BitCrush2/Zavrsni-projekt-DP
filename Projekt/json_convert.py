@@ -62,5 +62,5 @@ def txt_to_json(directory):
 
 
 # Example usage
-directory_path = "pdf2image_text"
+directory_path = "txts"
 txt_to_json(directory_path)

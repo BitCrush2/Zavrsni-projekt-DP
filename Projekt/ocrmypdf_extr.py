@@ -2,7 +2,7 @@ import os
 import ocrmypdf
 
 # Define the input and output directories
-input_folder = 'hrcak'
+input_folder = 'pdfs'
 output_folder = 'ocr_text'
 
 # Create the output directory if it doesn't exist
