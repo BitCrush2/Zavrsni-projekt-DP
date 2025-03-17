@@ -128,7 +128,7 @@ def main():
     For each publication:
       1. Check if a direct PDF link is available in the metadata.
       2. If not, load the article page and search its <a href> tags for a PDF link.
-      3. Download the PDF to a local folder named 'scholar_pdf'.
+      3. Download the PDF to a local folder named 'pdfs'.
     """
     # Create the output directory if it doesn't exist.
     output_dir = 'pdfs'

@@ -1,8 +1,8 @@
-# Import required libraries
-import os  # For file and directory operations
-import re  # For regular expressions (filename sanitization)
-import requests  # For making HTTP requests
-from bs4 import BeautifulSoup  # For HTML parsing
+
+import os
+import re
+import requests
+from bs4 import BeautifulSoup
 
 # DOAJ API base URL (Directory of Open Access Journals)
 DOAJ_API_BASE_URL = "https://doaj.org/api/search/"

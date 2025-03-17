@@ -1,9 +1,9 @@
-# Import required libraries
-import os  # For file and directory operations
-import requests  # For making HTTP requests
-from bs4 import BeautifulSoup  # For parsing HTML content
-from urllib.parse import urljoin  # For constructing absolute URLs from relative paths
-from PyPDF2 import PdfReader  # For extracting text from PDF files
+
+import os
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+from PyPDF2 import PdfReader
 
 
 def download_pdf(url, folder_name):
