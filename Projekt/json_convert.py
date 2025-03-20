@@ -1,10 +1,42 @@
 import os
 import json
 import datetime
-import re  # Added for paragraph splitting
+import re  # For paragraph splitting and regex extraction
 
+def extract_abstract_and_keywords(content):
+    """
+    Extract abstract and keywords from the content of a .txt file.
+    """
+    abstract = ""
+    keywords = []
 
-def txt_to_json(directory):
+    # Extract abstract (assuming it starts with "Abstract:")
+    abstract_match = re.search(r'Abstract:\s*(.*?)(?=\n\w+:|$)', content, re.DOTALL)
+    if abstract_match:
+        abstract = abstract_match.group(1).strip()
+
+    # Extract keywords (assuming they start with "Keywords:")
+    keywords_match = re.search(r'Keywords:\s*(.*?)(?=\n\w+:|$)', content, re.DOTALL)
+    if keywords_match:
+        keywords = [kw.strip() for kw in keywords_match.group(1).split(',')]
+
+    return abstract, keywords
+
+def read_metadata_file(metadata_directory, filename):
+    """
+    Read the metadata file and extract abstract and keywords.
+    """
+    metadata_file_path = os.path.join(metadata_directory, filename)
+    if os.path.exists(metadata_file_path):
+        with open(metadata_file_path, 'r', encoding='utf-8') as metadata_file:
+            content = metadata_file.read()
+            return extract_abstract_and_keywords(content)
+    return "", []
+
+def txt_to_json(directory, metadata_directory):
+    """
+    Convert .txt files in the specified directory to JSON format.
+    """
     for filename in os.listdir(directory):
         if filename.endswith(".txt"):
             txt_file_path = os.path.join(directory, filename)
@@ -15,15 +47,23 @@ def txt_to_json(directory):
             creation_time = datetime.datetime.fromtimestamp(file_stats.st_ctime).isoformat()  # Creation time
             modification_time = datetime.datetime.fromtimestamp(file_stats.st_mtime).isoformat()  # Modification time
 
-
-
-            # Read content (existing code)
+            # Read content
             try:
                 with open(txt_file_path, 'r', encoding='utf-8') as txt_file:
                     content = txt_file.read()
             except UnicodeDecodeError:
                 with open(txt_file_path, 'r', encoding='latin-1') as txt_file:
                     content = txt_file.read()
+
+            # Extract abstract and keywords from the main content
+            abstract, keywords = extract_abstract_and_keywords(content)
+
+            # Extract abstract and keywords from the metadata file
+            metadata_abstract, metadata_keywords = read_metadata_file(metadata_directory, filename)
+            if metadata_abstract:
+                abstract = metadata_abstract
+            if metadata_keywords:
+                keywords = metadata_keywords
 
             # Analyze the content
             word_count = len(content.split())  # Count words
@@ -42,13 +82,15 @@ def txt_to_json(directory):
                 "file_size_bytes": file_size,
                 "creation_time": creation_time,
                 "modification_time": modification_time,
-                "content":content,
+                "content": content,
                 "paragraphs": paragraphs,  # Changed from "content"
                 "paragraph_count": len(paragraphs),  # New field
                 "metadata": {
                     "word_count": word_count,
                     "line_count": line_count,
-                    "avg_paragraph_length": f"{len(content) / len(paragraphs):.1f}" if paragraphs else 0
+                    "avg_paragraph_length": f"{len(content) / len(paragraphs):.1f}" if paragraphs else 0,
+                    "abstract": abstract,  # Add abstract
+                    "keywords": keywords  # Add keywords
                 }
             }
             # Define the output JSON file path
@@ -63,4 +105,5 @@ def txt_to_json(directory):
 
 # Example usage
 directory_path = "txts"
-txt_to_json(directory_path)
+metadata_directory_path = "metadata"
+txt_to_json(directory_path, metadata_directory_path)

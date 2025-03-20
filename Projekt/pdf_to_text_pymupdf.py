@@ -5,7 +5,7 @@ import fitz  # PyMuPDF
 pdf_folder_path = 'pdfs'
 
 # Define the folder to save the extracted text files
-output_folder_path = 'pymupdf_text'
+output_folder_path = 'txts'
 
 # Create the output folder if it doesn't exist
 if not os.path.exists(output_folder_path):
