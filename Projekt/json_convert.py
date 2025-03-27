@@ -103,7 +103,12 @@ def txt_to_json(directory, metadata_directory):
             print(f"Transformed {txt_file_path} to {json_file_path}")
 
 
-# Example usage
-directory_path = "txts"
-metadata_directory_path = "metadata"
-txt_to_json(directory_path, metadata_directory_path)
+def main():
+    # Example usage
+    directory_path = "txts"
+    metadata_directory_path = "metadata"
+    txt_to_json(directory_path, metadata_directory_path)
+
+
+if __name__ == '__main__':
+    main()

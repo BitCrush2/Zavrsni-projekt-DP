@@ -123,8 +123,11 @@ def scrape_pdfs_from_website(base_url, keyword, num_pages, folder_name="pdfs"):
                     # Download the PDF and save it with the title as the filename
                     download_pdf(pdf_url, folder_name, title)
 
-if __name__ == "__main__":
+def main():
     base_url = "https://hrcak.srce.hr"
     keyword = input("Enter the keyword to search for: ")
     num_pages = int(input("Enter the number of pages to scrape: "))
     scrape_pdfs_from_website(base_url, keyword, num_pages)
+
+if __name__ == "__main__":
+    main()
