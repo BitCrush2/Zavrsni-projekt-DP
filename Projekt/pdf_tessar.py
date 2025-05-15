@@ -3,11 +3,18 @@ from pdf2image import convert_from_path
 import pytesseract
 
 def main():
-    # Set the path to the Tesseract executable if needed
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    # Set Tesseract path from environment variable or default to a common path
+    tesseract_cmd = os.environ.get('TESSERACT_CMD')
+    if tesseract_cmd:
+        pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+    else:
+        # Optionally check a default path (e.g., common Windows installation)
+        default_tesseract_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        if os.path.exists(default_tesseract_path):
+            pytesseract.pytesseract.tesseract_cmd = default_tesseract_path
 
-    # Set the Poppler path (adjust based on where you extracted Poppler)
-    poppler_path = r'C:\Users\Dino\Documents\poppler-24.08.0\Library\bin'
+    # Set Poppler path from environment variable
+    poppler_path = os.environ.get('POPPLER_PATH')
 
     # Define the input and output directories
     input_folder = 'pdfs'
