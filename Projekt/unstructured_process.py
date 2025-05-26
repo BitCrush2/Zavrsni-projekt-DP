@@ -43,6 +43,9 @@ def process_pdfs():
         except Exception as e:
             print(f"Error processing {pdf_file}: {str(e)}")
 
+def main():
+    process_pdfs()
+
 
 if __name__ == "__main__":
     process_pdfs()
