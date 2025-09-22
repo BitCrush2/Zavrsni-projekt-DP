@@ -1,6 +1,6 @@
 import os
 from unstructured.partition.pdf import partition_pdf
-from unstructured.staging.base import convert_to_dict, elements_to_json
+
 
 # Create directories if they don't exist
 input_folder = "pdfs"
