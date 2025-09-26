@@ -8,17 +8,14 @@ import urllib.parse
 
 def sanitize_filename(filename):
     """
-    Sanitize a filename by removing invalid characters.
-
-    Parameters:
-        filename (str): The original filename.
-
-    Returns:
-        str: A sanitized filename safe for use in file systems.
+    Sanitize a filename by removing invalid characters and normalizing whitespace.
     """
-    # Remove characters that are not allowed in filenames (common restrictions)
+    # Remove invalid characters
     sanitized = re.sub(r'[\\/*?:"<>|]', "", filename)
+    # Replace newlines and multiple spaces with a single space
+    sanitized = re.sub(r"\s+", " ", sanitized)
     return sanitized.strip()
+
 
 
 def download_pdf(pdf_url, file_path):
@@ -103,7 +100,7 @@ def main():
                 safe_title = sanitize_filename(title)
 
                 # Construct the full file path for saving the PDF
-                file_path = os.path.join("arxiv_pdf", f"{safe_title}.pdf")
+                file_path = os.path.join("pdfs", f"{safe_title}.pdf")
 
                 # Download the PDF
                 print(f"Downloading PDF for paper titled: {title}...")
