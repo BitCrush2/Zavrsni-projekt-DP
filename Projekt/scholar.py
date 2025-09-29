@@ -4,6 +4,7 @@ import requests
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 from scholarly import scholarly
+from urllib.parse import urljoin
 
 # Define a constant header to mimic a real browser in HTTP requests.
 HEADERS = {
@@ -70,7 +71,7 @@ def find_pdf_links(article_url):
             if href.lower().endswith('.pdf'):
                 # Convert relative URL to absolute URL if needed.
                 if not href.startswith('http'):
-                    href = requests.compat.urljoin(article_url, href)
+                    href = urljoin(article_url, href)
                 pdf_links.append(href)
         return pdf_links
     except Exception as e:
